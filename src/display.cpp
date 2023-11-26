@@ -31,10 +31,54 @@ XColor  black, white, red, green, orange, gray, deep_sky_blue, chocolate, dummy;
 
 unsigned int display_frame_number = 0;
 char tmp_disp_string[1024];
-char display_mode = 1;
+char display_mode = 0;
 
 
+extern struct balance_info current_meas;
 extern char run_flag;
+//-----------------------------------------------------------------------------------------------------------
+void display_draw_bullseye_and_plot_results(void){
+    unsigned int bullseye_draw_tracker = 0;
+
+    //Reset line and color paramters
+    XSetLineAttributes(display, DefaultGC(display, screen), 1, LineSolid, CapButt, JoinBevel);
+    XSetForeground(display, DefaultGC(display,screen), white.pixel);   
+
+    //Draw the outer clock ring
+    do{
+        XDrawArc(display, window, DefaultGC(display,screen), 
+                    DISPLAY_CLOCK_X - ((DISPLAY_CLOCK_DIAMETER - (bullseye_draw_tracker * DISPLAY_RING_SPACING)) / 2),
+                    DISPLAY_CLOCK_Y - ((DISPLAY_CLOCK_DIAMETER - (bullseye_draw_tracker * DISPLAY_RING_SPACING))  / 2),
+                    (DISPLAY_CLOCK_DIAMETER - (bullseye_draw_tracker * DISPLAY_RING_SPACING)),
+                    (DISPLAY_CLOCK_DIAMETER - (bullseye_draw_tracker * DISPLAY_RING_SPACING)),
+                    0,
+                    360*64);             
+        bullseye_draw_tracker++;
+    }while(bullseye_draw_tracker < 10);
+
+    //Draw the radial lines
+    bullseye_draw_tracker = 0;
+    do{
+        XDrawLine(display, window, DefaultGC(display,screen), 
+            DISPLAY_CLOCK_X,
+            DISPLAY_CLOCK_Y,
+            DISPLAY_CLOCK_X + ((DISPLAY_CLOCK_DIAMETER / 2) * sin(DEG2RAD * bullseye_draw_tracker * 30)),
+            DISPLAY_CLOCK_Y - ((DISPLAY_CLOCK_DIAMETER / 2) * cos(DEG2RAD * bullseye_draw_tracker * 30)));
+        bullseye_draw_tracker++;
+    }while(bullseye_draw_tracker < 12);
+
+    //Plot the current vibration levels. 
+    XSetForeground(display, DefaultGC(display,screen), red.pixel);  
+    XFillArc(display, window, DefaultGC(display,screen), 
+            DISPLAY_CLOCK_X + ((DISPLAY_VIBE_POINT_DIAMETER / -2) + (0.5 * DISPLAY_CLOCK_DIAMETER * current_meas.ips * sin(DEG2RAD * current_meas.clock_dir * 30 ))),
+            DISPLAY_CLOCK_Y - ((DISPLAY_VIBE_POINT_DIAMETER / 2) + (0.5 * DISPLAY_CLOCK_DIAMETER * current_meas.ips * cos(DEG2RAD * current_meas.clock_dir * 30 ))),
+            DISPLAY_VIBE_POINT_DIAMETER,
+            DISPLAY_VIBE_POINT_DIAMETER,
+            0,
+            360*64);    
+    XSetForeground(display, DefaultGC(display,screen), white.pixel); 
+
+}
 //-----------------------------------------------------------------------------------------------------------
 void display_close(void){
     cout << "Closing the display window\n";
@@ -49,11 +93,12 @@ void *display_refresh(void *arg){
         XClearWindow(display, window);      //Clear the window.
         //***************************************************************************************************
         switch(display_mode){
-            /*
-            case DISPLAY_SUPPRESSED:
-                display_draw_mode_text();
+            
+            case DISPLAY_CLOCK:
+                //display_draw_mode_text();
+                display_draw_bullseye_and_plot_results();
                 break;
-            */
+            
             default:
                 //display_draw_mode_text();
                 break;
@@ -90,7 +135,7 @@ void *display_refresh(void *arg){
                         //display_cycle_mode();
                         break;
                     case 0x09:      // ESC to blank the display
-                        
+                        run_flag = 0;
                         break;
                     default:
                         break;

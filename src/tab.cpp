@@ -22,8 +22,8 @@ char tab_uart_in_buffer[256];
 //char ahrs_packet_header[20];
 struct termios tab_uart_settings;
 
+balance_info current_meas;
 extern int display_frame_number;
-extern struct sensor_sv sensor_sv_current;
 //-----------------------------------------------------------------------------------------------------------
 /* open the serial port to the AHRS*/
 int tab_connect(void){
@@ -82,6 +82,11 @@ void *tab_update(void *arg){     //capture AHRS data from the UART and publish i
     while(1){
         memset(tab_uart_in_buffer,0,strlen(tab_uart_in_buffer));      //Clear the UART buffer
         
+        //TODO: Delete me
+        current_meas.clock_dir = 11;
+        current_meas.ips = 1;
+        current_meas.rpm = 300;
+
         /*
         write(tab_fd, AHRS_RPY_REQUEST, sizeof(AHRS_RPY_REQUEST));     //Ask for the roll pitch and yaw packet
 

@@ -5,6 +5,14 @@
 #define TAB_POLL_DELAY_US      (1 / (float)TAB_UPDATE_RATE_HZ) * 1000000
 
 #define TAB_CONSOLE_DEBUG      0
+
+//-----------------------------------------------------------------------------------------------------------
+
+struct balance_info{
+    float rpm;
+    float ips;
+    float clock_dir;
+};
 //-----------------------------------------------------------------------------------------------------------
 
 void *tab_update(void *arg);

@@ -6,7 +6,15 @@
 #define DISPLAY_X_CENTER                WIN_WIDTH / 2
 #define DISPLAY_Y_CENTER                WIN_HEIGHT / 2
 
+//Parameters for "clock display"
+#define DISPLAY_CLOCK_DIAMETER          600
+#define DISPLAY_VIBE_POINT_DIAMETER     20
+#define DISPLAY_RING_SPACING            DISPLAY_CLOCK_DIAMETER / 10
+#define DISPLAY_CLOCK_X                 DISPLAY_X_CENTER   
+#define DISPLAY_CLOCK_Y                 DISPLAY_Y_CENTER
 
+
+#define DISPLAY_CLOCK                   0
 #define DISPLAY_NUMBER_OF_MODES         2
 //-----------------------------------------------------------------------------------------------------------
 enum {
