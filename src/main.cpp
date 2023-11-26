@@ -35,7 +35,7 @@ int main(){
 
     //Initialize the HW interfaces. 
     //open_and_write_a_log();   //open a text file and log some data to it
-    //tab_connect();             //Open the AHRS uart and connect to the AHRS
+    tab_connect();             //Open the AHRS uart and connect to the AHRS
     display_setup();            //Make the display window
 
     //Spawn the relevant threads

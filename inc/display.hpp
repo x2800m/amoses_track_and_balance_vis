@@ -13,6 +13,10 @@
 #define DISPLAY_CLOCK_X                 DISPLAY_X_CENTER   
 #define DISPLAY_CLOCK_Y                 DISPLAY_Y_CENTER
 
+//Parameters for "chadwick style text readout"
+#define DISPLAY_CHADWICK_TEXT_X         DISPLAY_X_CENTER - 80    
+#define DISPLAY_CHADWICK_TEXT_Y         30
+
 
 #define DISPLAY_CLOCK                   0
 #define DISPLAY_NUMBER_OF_MODES         2

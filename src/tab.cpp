@@ -18,8 +18,8 @@ using namespace std;
 
 int tab_fd;
 unsigned int tab_frame_number = 0;
-char tab_uart_in_buffer[256];
-//char ahrs_packet_header[20];
+char tab_uart_in_buffer[8000];
+char current_data_format = 0;
 struct termios tab_uart_settings;
 
 balance_info current_meas;
@@ -82,31 +82,15 @@ void *tab_update(void *arg){     //capture AHRS data from the UART and publish i
     while(1){
         memset(tab_uart_in_buffer,0,strlen(tab_uart_in_buffer));      //Clear the UART buffer
         
-        //TODO: Delete me
-        current_meas.clock_dir = 11;
-        current_meas.ips = 1;
-        current_meas.rpm = 300;
+        //write(tab_fd, AHRS_RPY_REQUEST, sizeof(AHRS_RPY_REQUEST));     //Ask for the roll pitch and yaw packet
 
-        /*
-        write(tab_fd, AHRS_RPY_REQUEST, sizeof(AHRS_RPY_REQUEST));     //Ask for the roll pitch and yaw packet
+        int n = read(tab_fd, &tab_uart_in_buffer, sizeof(tab_uart_in_buffer));   //Read the return from the UART
 
-        int n = read(ahrs_fd, &ahrs_uart_in_buffer, sizeof(ahrs_uart_in_buffer));   //Read the return from the UART
-
-        sscanf(ahrs_uart_in_buffer, "%[^,],%d,%f,%f,%f\n",  
-                                                ahrs_packet_header,
-                                                &ahrs_reg_id,
-                                                &sensor_sv_current.yaw, 
-                                                &sensor_sv_current.pitch, 
-                                                &sensor_sv_current.roll);
-
-        if(AHRS_CONSOLE_DEBUG == 1){
-            cout << "AHRS: " + to_string(sensor_sv_current.roll) + 
-                        ", " + to_string(sensor_sv_current.pitch) +
-                        ", " + to_string(sensor_sv_current.yaw) +
-                        ", " + to_string(ahrs_frame_number) + 
-                        "\n";
-        }
-        */
+        sscanf(tab_uart_in_buffer, "Page %d: %fRPM << %f IPS @ %f >>\n\r",  
+                                                &current_data_format,
+                                                &current_meas.rpm, 
+                                                &current_meas.ips, 
+                                                &current_meas.clock_dir);        
 
         usleep(TAB_POLL_DELAY_US);
         tab_frame_number++;

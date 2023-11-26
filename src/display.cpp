@@ -39,6 +39,7 @@ extern char run_flag;
 //-----------------------------------------------------------------------------------------------------------
 void display_draw_bullseye_and_plot_results(void){
     unsigned int bullseye_draw_tracker = 0;
+    char display_string[100];
 
     //Reset line and color paramters
     XSetLineAttributes(display, DefaultGC(display, screen), 1, LineSolid, CapButt, JoinBevel);
@@ -77,6 +78,14 @@ void display_draw_bullseye_and_plot_results(void){
             0,
             360*64);    
     XSetForeground(display, DefaultGC(display,screen), white.pixel); 
+
+    //Display the text representation of the data.
+    sprintf(display_string, "%.0f RPM  << %.3f IPS @ %.1f >>", current_meas.rpm, current_meas.ips, current_meas.clock_dir);
+    XDrawString(display, window, DefaultGC(display,screen),
+                    DISPLAY_CHADWICK_TEXT_X,
+                    DISPLAY_CHADWICK_TEXT_Y, 
+                    display_string, 
+                    strlen(display_string) );
 
 }
 //-----------------------------------------------------------------------------------------------------------
