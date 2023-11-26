@@ -6,6 +6,7 @@
 #include <math.h>
 #include <mutex>
 #include <algorithm>
+#include <time.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -33,9 +34,13 @@ unsigned int display_frame_number = 0;
 char tmp_disp_string[1024];
 char display_mode = 0;
 
+time_t current_time = time(NULL);
+struct tm *local_time = localtime(&current_time);
+char time_string[64];
 
 extern struct balance_info current_meas;
 extern char run_flag;
+extern int tab_fd;
 //-----------------------------------------------------------------------------------------------------------
 void display_draw_bullseye_and_plot_results(void){
     unsigned int bullseye_draw_tracker = 0;
@@ -84,6 +89,15 @@ void display_draw_bullseye_and_plot_results(void){
     XDrawString(display, window, DefaultGC(display,screen),
                     DISPLAY_CHADWICK_TEXT_X,
                     DISPLAY_CHADWICK_TEXT_Y, 
+                    display_string, 
+                    strlen(display_string) );
+
+    //Display the timestamp
+    size_t ret = strftime(time_string, sizeof(time_string), "%c", local_time);
+    sprintf(display_string, "%s", time_string);
+    XDrawString(display, window, DefaultGC(display,screen),
+                    DISPLAY_TIMESTAMP_X,
+                    DISPLAY_TIMESTAMP_Y, 
                     display_string, 
                     strlen(display_string) );
 
@@ -145,6 +159,9 @@ void *display_refresh(void *arg){
                         break;
                     case 0x09:      // ESC to blank the display
                         run_flag = 0;
+                        break;
+                    case 0x27:
+                        write(tab_fd, "s", 1);          //Toggle Strobe
                         break;
                     default:
                         break;

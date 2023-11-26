@@ -17,6 +17,10 @@
 #define DISPLAY_CHADWICK_TEXT_X         DISPLAY_X_CENTER - 80    
 #define DISPLAY_CHADWICK_TEXT_Y         30
 
+//Parameters for the timestamp
+#define DISPLAY_TIMESTAMP_X             DISPLAY_X_CENTER - 75
+#define DISPLAY_TIMESTAMP_Y             WIN_HEIGHT - 30
+
 
 #define DISPLAY_CLOCK                   0
 #define DISPLAY_NUMBER_OF_MODES         2
