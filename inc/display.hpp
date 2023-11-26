@@ -14,12 +14,12 @@
 #define DISPLAY_CLOCK_Y                 DISPLAY_Y_CENTER
 
 //Parameters for "chadwick style text readout"
-#define DISPLAY_CHADWICK_TEXT_X         DISPLAY_X_CENTER - 80    
-#define DISPLAY_CHADWICK_TEXT_Y         30
+#define DISPLAY_CHADWICK_TEXT_X         DISPLAY_X_CENTER - 180    
+#define DISPLAY_CHADWICK_TEXT_Y         40
 
 //Parameters for the timestamp
-#define DISPLAY_TIMESTAMP_X             DISPLAY_X_CENTER - 75
-#define DISPLAY_TIMESTAMP_Y             WIN_HEIGHT - 30
+#define DISPLAY_TIMESTAMP_X             DISPLAY_X_CENTER - 150
+#define DISPLAY_TIMESTAMP_Y             WIN_HEIGHT - 10
 
 
 #define DISPLAY_CLOCK                   0

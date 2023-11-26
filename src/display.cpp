@@ -29,6 +29,7 @@ KeySym  key;
 GC      app_gc;
 Colormap display_colormap; 
 XColor  black, white, red, green, orange, gray, deep_sky_blue, chocolate, dummy;
+Font font;
 
 unsigned int display_frame_number = 0;
 char tmp_disp_string[1024];
@@ -37,6 +38,7 @@ char display_mode = 0;
 time_t current_time = time(NULL);
 struct tm *local_time = localtime(&current_time);
 char time_string[64];
+
 
 extern struct balance_info current_meas;
 extern char run_flag;
@@ -50,6 +52,7 @@ void display_draw_bullseye_and_plot_results(void){
     XSetLineAttributes(display, DefaultGC(display, screen), 1, LineSolid, CapButt, JoinBevel);
     XSetForeground(display, DefaultGC(display,screen), white.pixel);   
 
+    XSetForeground(display, DefaultGC(display,screen), gray.pixel);  
     //Draw the outer clock ring
     do{
         XDrawArc(display, window, DefaultGC(display,screen), 
@@ -72,6 +75,7 @@ void display_draw_bullseye_and_plot_results(void){
             DISPLAY_CLOCK_Y - ((DISPLAY_CLOCK_DIAMETER / 2) * cos(DEG2RAD * bullseye_draw_tracker * 30)));
         bullseye_draw_tracker++;
     }while(bullseye_draw_tracker < 12);
+    XSetForeground(display, DefaultGC(display,screen), white.pixel); 
 
     //Plot the current vibration levels. 
     XSetForeground(display, DefaultGC(display,screen), red.pixel);  
@@ -214,6 +218,9 @@ void display_setup(void){
     XSetWindowBackground(display, window, black.pixel);
     XSetBackground(display, DefaultGC(display,screen), black.pixel);
     XSetForeground(display, DefaultGC(display,screen), green.pixel);
+
+    font = XLoadFont(display, "12x24kana");
+    XSetFont(display, DefaultGC(display,screen), font);
 
     XFlush(display);
 
